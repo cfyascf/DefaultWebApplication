@@ -8,10 +8,10 @@ public class DepartmentData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
     @Column(name = "Name")
-    public String name;
+    private String name;
 
     public Long getId() {
         return id;

@@ -23,6 +23,12 @@ public class DependenciesConfiguration {
 
     @Bean
     @Scope("singleton")
+    public ServiceService serviceService() {
+        return new DefaultServiceService();
+    }
+
+    @Bean
+    @Scope("singleton")
     public PasswordService passwordService() {
         return new DefaultPasswordService();
     }

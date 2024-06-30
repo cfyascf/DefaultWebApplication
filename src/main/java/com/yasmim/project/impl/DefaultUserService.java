@@ -68,7 +68,7 @@ public class DefaultUserService implements UserService {
                     "Weak password.");
         }
 
-        var department = departmentService.findDepartment(
+        var department = departmentService.findDepartmentByName(
                 obj.department()
         );
 
@@ -85,6 +85,16 @@ public class DefaultUserService implements UserService {
         return new SignResponse(
                 newUser,
                 "User signed up successfully.");
+    }
+
+    @Override
+    public UserData findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public UserData findUserByFullName(String fullname) {
+        return userRepository.findByFullname(fullname);
     }
 
     public String format(String input) {

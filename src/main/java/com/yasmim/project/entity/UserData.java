@@ -13,7 +13,7 @@ public class UserData {
     @Column(name = "Username")
     private String username;
 
-    @Column(name = "FullName")
+    @Column(name = "Fullname")
     private String fullname;
 
     @Column(name = "Email")
@@ -22,7 +22,7 @@ public class UserData {
     @Column(name = "Role")
     private Integer role;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Department")
     private DepartmentData department;
 

@@ -13,12 +13,12 @@ public class DefaultDepartmentService implements DepartmentService {
     private DepartmentRepository departmentRepository;
 
     @Override
-    public List<DepartmentData> getDepartments() {
+    public List<DepartmentData> getAllDepartments() {
         return departmentRepository.findAll();
     }
 
     @Override
-    public DepartmentData findDepartment(String name) {
+    public DepartmentData findDepartmentByName(String name) {
         return departmentRepository.findByName(name);
     }
 }
