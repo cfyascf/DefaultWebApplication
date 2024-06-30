@@ -2,21 +2,17 @@ package com.yasmim.project.impl;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-
-import com.yasmim.project.dto.AuthToken;
-import com.yasmim.project.service.JWTService;
-import com.yasmim.project.service.KeyService;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+
 import com.yasmim.project.dto.JWTPayload;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.yasmim.project.service.JWTService;
+import com.yasmim.project.service.KeyService;
 
 public class RSAJWTService implements JWTService {
 

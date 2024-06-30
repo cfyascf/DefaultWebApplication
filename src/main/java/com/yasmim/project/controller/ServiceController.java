@@ -1,10 +1,10 @@
 package com.yasmim.project.controller;
 
-import com.yasmim.project.dto.AuthToken;
 import com.yasmim.project.dto.RegisterServiceData;
 import com.yasmim.project.entity.ServiceData;
 import com.yasmim.project.service.JWTService;
 import com.yasmim.project.service.ServiceService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
