@@ -1,0 +1,107 @@
+main {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#form-container {
+    width: 450px;
+    height: 500px;
+    box-shadow: rgba(0, 0, 0, 0.15)  1.95px 1.95px 2.6px;
+
+    background-color: white;
+}
+
+#colored-line-form-horizontal {
+    background-color: var(--default-blue);
+    height: 1vh;
+}
+
+#form-content {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+#colored-line-form-vertical {
+    width: 1vh;
+    height: 98.7%;
+    background-color: var(--default-blue);
+}
+
+#form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+
+    padding: 30px;
+}
+
+#title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 59%;
+    gap: 10px;
+}
+
+#title h3 {
+    font-size: var(--title-font-size);
+    font-weight: 500;
+}
+
+#fields {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 30px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 7px;
+}
+
+.input-container p {
+    font-weight: 500;
+}
+
+.input-container input {
+    height: 5vh;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 10px;
+}
+
+.input-container a {
+    align-self: flex-end;
+    color: var(--default-green);
+    transition: 0.2s;
+}
+
+.input-container a:hover {
+    color: var(--darker-green);
+}
+
+#form button {
+    width: 100px;
+    height: 40px;
+    background-color: var(--default-green);
+    color: white;
+    transition: 0.2s;
+}
+
+#form button:hover {
+    background-color: var(--darker-green);
+    color: white;
+}

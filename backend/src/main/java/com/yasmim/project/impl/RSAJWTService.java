@@ -54,7 +54,7 @@ public class RSAJWTService implements JWTService {
         }
 
         var claim = auth.getClaims().get("role");
-        Object roleValue = claim.as(Object.class); // Adjust the class type as per your claim's expected type
+        Object roleValue = claim.as(Object.class);
         String roleAsString = String.valueOf(roleValue);
 
         return Integer.parseInt(roleAsString) == permissionLevel;
