@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,16 +24,29 @@ public class UserController {
     private JWTService jwtService;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthToken> signup(@RequestBody RegisterData obj) {
+    public ResponseEntity<AuthToken> signup(
+            @RequestBody RegisterData obj,
+            @RequestHeader("Authorization") String jwt) {
 
-        var signupReponse = userService.signup(obj);
-
-        if(signupReponse.user() == null) {
+        if(!jwtService.verifyPermission(jwt, 0)) {
             return new ResponseEntity<>(
                     new AuthToken(
                             null,
                             false,
-                            signupReponse.message()
+                            "User does not have permission."
+                    ),
+                    HttpStatus.FORBIDDEN
+            );
+        }
+
+        var signupResponse = userService.signup(obj);
+
+        if(signupResponse.user() == null) {
+            return new ResponseEntity<>(
+                    new AuthToken(
+                            null,
+                            false,
+                            signupResponse.message()
                     ),
                     HttpStatus.BAD_REQUEST);
         }
@@ -47,32 +61,33 @@ public class UserController {
                 new AuthToken(
                         token,
                         true,
-                        signupReponse.message()
+                        signupResponse.message()
                 ),
                 HttpStatus.CREATED);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthToken> login(@RequestBody LoginData obj) {
+    public ResponseEntity<AuthToken> login(
+            @RequestBody LoginData obj) {
 
-        var signResponse = userService.signin(
+        var signinResponse = userService.signin(
                 obj.username(),
                 obj.password()
         );
 
-        if(signResponse.user() == null) {
+        if(signinResponse.user() == null) {
             return new ResponseEntity<>(
                     new AuthToken(
                             null,
                             false,
-                            signResponse.message()
+                            signinResponse.message()
                     ),
                     HttpStatus.OK);
         }
         var token = jwtService.getToken(
                 new JWTPayload(
-                        signResponse.user().getUsername(),
-                        signResponse.user().getRole()
+                        signinResponse.user().getUsername(),
+                        signinResponse.user().getRole()
                 )
         );
 
@@ -80,7 +95,7 @@ public class UserController {
                 new AuthToken(
                         token,
                         true,
-                        signResponse.message()
+                        signinResponse.message()
                 ),
                 HttpStatus.OK);
     }

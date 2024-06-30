@@ -5,5 +5,5 @@ import com.yasmim.project.dto.JWTPayload;
 
 public interface JWTService {
     public String getToken(JWTPayload userData);
-    public DecodedJWT verifyToken(String token, JWTPayload userData);
+    public Boolean verifyPermission(String token, Integer permissionLevel);
 }
