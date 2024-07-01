@@ -2,7 +2,9 @@ package com.yasmim.project.impl;
 
 import com.yasmim.project.service.PasswordService;
 
-public class DefaultPasswordService implements PasswordService {
+import org.springframework.security.crypto.bcrypt.BCrypt;
+
+public class BCryptPasswordService implements PasswordService {
 
     @Override
     public Boolean verifyPasswordStrength(String password) {
@@ -18,5 +20,18 @@ public class DefaultPasswordService implements PasswordService {
         }
 
         return true;
+    }
+
+    @Override
+    public String encodePassword(String password) {
+        return BCrypt.hashpw(
+            password, 
+            BCrypt.gensalt()
+        );
+    }
+
+    @Override
+    public Boolean verifyEncodedPassword(String rawPassword, String encodedPassword) {
+        return BCrypt.checkpw(rawPassword, encodedPassword);
     }
 }

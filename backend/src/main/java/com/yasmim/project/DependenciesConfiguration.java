@@ -5,6 +5,7 @@ import com.yasmim.project.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class DependenciesConfiguration {
@@ -30,7 +31,7 @@ public class DependenciesConfiguration {
     @Bean
     @Scope("singleton")
     public PasswordService passwordService() {
-        return new DefaultPasswordService();
+        return new BCryptPasswordService();
     }
 
     @Bean

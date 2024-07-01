@@ -2,9 +2,7 @@ package com.yasmim.project.impl;
 
 import com.yasmim.project.dto.RegisterData;
 import com.yasmim.project.dto.SignResponse;
-import com.yasmim.project.entity.DepartmentData;
 import com.yasmim.project.entity.UserData;
-import com.yasmim.project.repository.DepartmentRepository;
 import com.yasmim.project.repository.UserRepository;
 import com.yasmim.project.service.DepartmentService;
 import com.yasmim.project.service.PasswordService;
@@ -35,7 +33,7 @@ public class DefaultUserService implements UserService {
                     "User not found.");
         }
 
-        if(!user.getPassword().equals(password)) {
+        if(!passwordService.verifyEncodedPassword(password, user.getPassword())) {
             return new SignResponse(
                     null,
                     "Wrong password.");
@@ -78,7 +76,7 @@ public class DefaultUserService implements UserService {
         newUser.setEmail(format(obj.email()));
         newUser.setRole(obj.role());
         newUser.setDepartment(department);
-        newUser.setPassword(obj.confirmPassword());
+        newUser.setPassword(passwordService.encodePassword(obj.confirmPassword()));
 
         userRepository.save(newUser);
 
