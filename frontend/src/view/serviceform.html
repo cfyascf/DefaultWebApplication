@@ -12,9 +12,10 @@
     <!-- style -->
     <link rel="stylesheet" href="../style/global.css">
     <link rel="stylesheet" href="../style/navbar.css">
-    <link rel="stylesheet" href="../style/main.css">
+    <link rel="stylesheet" href="../style/form.css">
+    <link rel="stylesheet" href="../style/serviceform.css">
     
-    <title>Menu</title>
+    <title>Register User</title>
 </head>
 <body>
     <header>
@@ -36,19 +37,26 @@
         </nav>
     </header>
     <main>
-        <div id="main-content">
-            <div id="menu-buttons">
-                <div class="button">
-                    <img src="../images/register-user.png" alt="">
-                    <a href="userform.html">Register user</a>
-                </div>
-                <div class="button">
-                    <img src="../images/register-service.png" alt="">
-                    <a href="serviceform.html">Register service</a>
-                </div>
-                <div class="button">
-                    <img src="../images/see-services.png" alt="">
-                    <a href="">See services</a>
+        <div id="form-container">
+            <div id="form-content">
+                <div id="form">
+                    <div id="title">
+                        <h3>Register Service</h3>
+                        <p>Create new service by filling the following fields:</p>
+                    </div>
+                    <div id="fields">
+                        <div class="input-container">
+                            <p>Name</p>
+                            <input type="text" name="email">
+                        </div>
+                        <div class="two-inputs">
+                            <div class="input-container">
+                                <p>Description</p>
+                                <input type="text" name="username">
+                            </div>
+                        </div>
+                    </div>
+                    <button>Enter</button>
                 </div>
             </div>
         </div>

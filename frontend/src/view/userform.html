@@ -13,9 +13,9 @@
     <link rel="stylesheet" href="../style/global.css">
     <link rel="stylesheet" href="../style/navbar.css">
     <link rel="stylesheet" href="../style/form.css">
-    <link rel="stylesheet" href="../style/signin.css">
+    <link rel="stylesheet" href="../style/userform.css">
     
-    <title>SignIn</title>
+    <title>Register User</title>
 </head>
 <body>
     <header>
@@ -26,26 +26,50 @@
                     <img src="../images/logo.png" alt="" id="company-btn">
                     <a href="">CompanyName</a>
                 </div>
+                <div id="user-section">
+                    <div id="user">
+                        <img src="../images/user-icon.png" alt="" id="user-btn">
+                        <a>Username</a>
+                    </div>
+                    <img src="../images/logout-icon.png" alt="" id="logout-btn">
+                </div>
             </div>
         </nav>
     </header>
     <main>
         <div id="form-container">
+            <!-- <div id="colored-line-form-horizontal"></div> -->
             <div id="form-content">
+                <div id="colored-line-form-vertical"></div>
                 <div id="form">
                     <div id="title">
-                        <h3>Sign In</h3>
-                        <p>Enter your account by filling the following fields:</p>
+                        <h3>Register User</h3>
+                        <p>Create new account by filling the following fields:</p>
                     </div>
                     <div id="fields">
                         <div class="input-container">
-                            <p>Username</p>
-                            <input type="text" name="username">
+                            <p>Email</p>
+                            <input type="text" name="email">
+                        </div>
+                        <div class="two-inputs">
+                            <div class="input-container">
+                                <p>Username</p>
+                                <input type="text" name="username">
+                            </div>
+                        </div>
+                        <div class="two-inputs">
+                            <div class="input-container">
+                                <p>Fullname</p>
+                                <input type="text" name="username">
+                            </div>
                         </div>
                         <div class="input-container">
                             <p>Password</p>
                             <input type="password" name="password">
-                            <a href="">Forgot your password?</a>
+                        </div>
+                        <div class="input-container">
+                            <p>Confirm Password</p>
+                            <input type="password" name="password">
                         </div>
                     </div>
                     <button>Enter</button>
