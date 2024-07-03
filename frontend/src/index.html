@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="style/navbar.css">
     <link rel="stylesheet" href="style/form.css">
     <link rel="stylesheet" href="style/signin.css">
+
+    <script src="script/api.js"></script>
     
     <title>SignIn</title>
 </head>
@@ -30,6 +32,9 @@
         </nav>
     </header>
     <main>
+        <div id="response-container">
+            <p id="api-response"></p>
+        </div>
         <div id="form-container">
             <div id="form-content">
                 <div id="form">
@@ -40,15 +45,15 @@
                     <div id="fields">
                         <div class="input-container">
                             <p>Username</p>
-                            <input type="text" name="username">
+                            <input id="username-input" type="text" name="username">
                         </div>
                         <div class="input-container">
                             <p>Password</p>
-                            <input type="password" name="password">
+                            <input id="password-input" type="password" name="password">
                             <a href="">Forgot your password?</a>
                         </div>
                     </div>
-                    <button>Enter</button>
+                    <button onclick="signin()">Enter</button>
                 </div>
             </div>
         </div>
