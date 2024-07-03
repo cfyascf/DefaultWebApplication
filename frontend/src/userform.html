@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="style/form.css">
     <link rel="stylesheet" href="style/userform.css">
     
+    <script src="script/api/signup.js"></script>
+
     <title>Register User</title>
 </head>
 <body>
@@ -37,6 +39,9 @@
         </nav>
     </header>
     <main>
+        <div id="response-container">
+            <p id="api-response"></p>
+        </div>
         <div id="form-container">
             <!-- <div id="colored-line-form-horizontal"></div> -->
             <div id="form-content">
@@ -49,30 +54,30 @@
                     <div id="fields">
                         <div class="input-container">
                             <p>Email</p>
-                            <input type="text" name="email">
+                            <input id="email-input" type="text" name="email">
                         </div>
                         <div class="two-inputs">
                             <div class="input-container">
                                 <p>Username</p>
-                                <input type="text" name="username">
+                                <input id="username-input" type="text" name="username">
                             </div>
                         </div>
                         <div class="two-inputs">
                             <div class="input-container">
                                 <p>Fullname</p>
-                                <input type="text" name="username">
+                                <input id="fullname-input" type="text" name="fullname">
                             </div>
                         </div>
                         <div class="input-container">
                             <p>Password</p>
-                            <input type="password" name="password">
+                            <input id="password-input" type="password" name="password">
                         </div>
                         <div class="input-container">
                             <p>Confirm Password</p>
-                            <input type="password" name="password">
+                            <input id="confirmpassword-input" type="password" name="password">
                         </div>
                     </div>
-                    <button>Enter</button>
+                    <button type="submit" onclick="signup()">Enter</button>
                 </div>
             </div>
         </div>

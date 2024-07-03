@@ -111,4 +111,7 @@ main {
     height: 40px;
     background-color: rgb(240, 141, 141);
     color: rgb(177, 29, 29);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
