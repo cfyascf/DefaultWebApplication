@@ -1,7 +1,11 @@
 package com.yasmim.project.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "ServiceData")
 public class ServiceData {
@@ -19,28 +23,4 @@ public class ServiceData {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Manager")
     private UserData manager;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public UserData getManager() {
-        return manager;
-    }
-
-    public void setManager(UserData manager) {
-        this.manager = manager;
-    }
 }
