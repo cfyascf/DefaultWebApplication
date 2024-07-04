@@ -25,16 +25,8 @@ public class DepartmentController {
     public ResponseEntity<List<DepartmentData>> getAllDepartments(
             @RequestHeader("Authorization") String jwt) {
 
-        if(!jwtService.verifyPermission(jwt, null)) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.FORBIDDEN
-            );
-        }
+        jwtService.verifyPermission(jwt, null);
 
-        return new ResponseEntity<>(
-                departmentService.getAllDepartments(),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(departmentService.getAllDepartments());
     }
 }

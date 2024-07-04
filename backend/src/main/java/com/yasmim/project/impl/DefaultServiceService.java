@@ -28,18 +28,15 @@ public class DefaultServiceService implements ServiceService {
     }
 
     @Override
-    public String registerService(RegisterServiceData obj) {
+    public ServiceData registerService(RegisterServiceData obj) {
         ServiceData service = new ServiceData();
-
         service.setName(format(obj.name()));
         service.setDescription(format(obj.description()));
 
         var manager = userService.findUserByFullName(format(obj.managerName()));
         service.setManager(manager);
 
-        serviceRepository.save(service);
-
-        return "Service registered successfully";
+        return serviceRepository.save(service);
     }
 
     public String format(String input) {
@@ -47,9 +44,8 @@ public class DefaultServiceService implements ServiceService {
     }
 
     public List<ServiceData> filterServices(String query, List<ServiceData> services) {
-        if(query == null || query.isEmpty()) {
-            return services;
-        }
+        if(query == null || query.isEmpty()) return services;
+
         return services.stream()
                 .filter(s -> s.getName().contains(query))
                 .toList();
@@ -57,13 +53,9 @@ public class DefaultServiceService implements ServiceService {
 
     public List<ServiceData> paginate(List<ServiceData> filteredServices, Integer index, Integer size) {
 
-        if(size > filteredServices.size()) {
-            return filteredServices;
-        }
+        if(size > filteredServices.size()) { return filteredServices; }
 
-        if(index == 0) {
-            index = 1;
-        }
+        if(index == 0) { index = 1; }
 
         var servicesIndexes = index * size;
         List<ServiceData> paginatedServices = new ArrayList<>();

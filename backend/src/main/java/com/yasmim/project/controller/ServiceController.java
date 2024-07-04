@@ -22,21 +22,13 @@ public class ServiceController {
     private JWTService jwtService;
 
     @PostMapping("/service")
-    public ResponseEntity<String> registerService(
+    public ResponseEntity<ServiceData> registerService(
             @RequestBody RegisterServiceData obj,
             @RequestHeader("Authorization") String jwt) {
 
-        if(!jwtService.verifyPermission(jwt, 1)) {
-            return new ResponseEntity<>(
-                    "User does not have permission.",
-                    HttpStatus.FORBIDDEN
-            );
-        }
+        jwtService.verifyPermission(jwt, 1);
 
-        return new ResponseEntity<>(
-                serviceService.registerService(obj),
-                HttpStatus.CREATED
-        );
+        return ResponseEntity.ok(serviceService.registerService(obj));
     }
 
     @GetMapping("/service")
@@ -46,12 +38,7 @@ public class ServiceController {
             @RequestParam Integer size,
             @RequestHeader("Authorization") String jwt) {
 
-        if(!jwtService.verifyPermission(jwt, null)) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.FORBIDDEN
-            );
-        }
+        jwtService.verifyPermission(jwt, null);
 
         return new ResponseEntity<>(
                 serviceService.getPaginatedServices(query, index, size),

@@ -1,8 +1,14 @@
 package com.yasmim.project.impl;
 
+import com.yasmim.project.dto.JWTPayload;
+import com.yasmim.project.dto.LoginData;
 import com.yasmim.project.dto.RegisterData;
 import com.yasmim.project.dto.SignResponse;
 import com.yasmim.project.entity.UserData;
+import com.yasmim.project.exception.BadRequestException;
+import com.yasmim.project.exception.ConflictException;
+import com.yasmim.project.exception.NotFoundException;
+import com.yasmim.project.exception.UnauthorizedException;
 import com.yasmim.project.repository.UserRepository;
 import com.yasmim.project.service.DepartmentService;
 import com.yasmim.project.service.PasswordService;
@@ -22,53 +28,41 @@ public class DefaultUserService implements UserService {
     @Autowired
     private PasswordService passwordService;
 
+    @Autowired
+    private RSASHA256JWTService jwtService;
+
     @Override
-    public SignResponse signin(String username, String password) {
+    public String signin(LoginData obj) {
 
-        var user = userRepository.findByUsername(username);
-
+        var user = userRepository.findByUsername(obj.username());
         if(user == null) {
-            return new SignResponse(
-                    null,
-                    "User not found.");
+            throw new NotFoundException("User not found");
         }
 
-        if(!passwordService.verifyEncodedPassword(password, user.getPassword())) {
-            return new SignResponse(
-                    null,
-                    "Wrong password.");
+        if(!passwordService.verifyEncodedPassword(obj.password(), user.getPassword())) {
+            throw new UnauthorizedException("Invalid password");
         }
 
-        return new SignResponse(
-                user,
-                "User signed in successfully.");
+        return jwtService.getToken(new JWTPayload(user.getUsername(), user.getRole()));
     }
 
     @Override
-    public SignResponse signup(RegisterData obj) {
+    public String signup(RegisterData obj) {
 
         if(!obj.password().equals(obj.confirmPassword())) {
-            return new SignResponse(
-                    null,
-                    "Passwords do not match.");
+            throw new BadRequestException("Passwords do not match");
+        }
+
+        if(!passwordService.verifyPasswordStrength(obj.password())) {
+            throw new BadRequestException("Weak password.");
         }
 
         var existingUser = userRepository.findByUsername(obj.username());
         if(existingUser != null) {
-            return new SignResponse(
-                    null,
-                    "Username already exists.");
+            throw new ConflictException("Username already exists");
         }
 
-        if(!passwordService.verifyPasswordStrength(obj.password())) {
-            return new SignResponse(
-                    null,
-                    "Weak password.");
-        }
-
-        var department = departmentService.findDepartmentByName(
-                obj.department()
-        );
+        var department = departmentService.findDepartmentByName(obj.department());
 
         UserData newUser = new UserData();
         newUser.setUsername(format(obj.username()));
@@ -80,9 +74,7 @@ public class DefaultUserService implements UserService {
 
         userRepository.save(newUser);
 
-        return new SignResponse(
-                newUser,
-                "User signed up successfully.");
+        return jwtService.getToken(new JWTPayload(newUser.getUsername(), newUser.getRole()));
     }
 
     @Override

@@ -25,79 +25,19 @@ public class UserController {
     private JWTService jwtService;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthToken> signup(
+    public ResponseEntity<String> signup(
             @RequestBody RegisterData obj,
             @RequestHeader("Authorization") String jwt) {
 
-        if(!jwtService.verifyPermission(jwt, 0)) {
-            return new ResponseEntity<>(
-                    new AuthToken(
-                            null,
-                            false,
-                            "User does not have permission."
-                    ),
-                    HttpStatus.FORBIDDEN
-            );
-        }
+        jwtService.verifyPermission(jwt, 0);
 
-        var signupResponse = userService.signup(obj);
-
-        if(signupResponse.user() == null) {
-            return new ResponseEntity<>(
-                    new AuthToken(
-                            null,
-                            false,
-                            signupResponse.message()
-                    ),
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        var token = jwtService.getToken(
-                new JWTPayload(
-                    obj.username(),
-                    obj.role()
-        ));
-
-        return new ResponseEntity<>(
-                new AuthToken(
-                        token,
-                        true,
-                        signupResponse.message()
-                ),
-                HttpStatus.CREATED);
+        return ResponseEntity.ok(userService.signup(obj));
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthToken> login(
+    public ResponseEntity<String> login(
             @RequestBody LoginData obj) {
 
-        var signinResponse = userService.signin(
-                obj.username(),
-                obj.password()
-        );
-
-        if(signinResponse.user() == null) {
-            return new ResponseEntity<>(
-                    new AuthToken(
-                            null,
-                            false,
-                            signinResponse.message()
-                    ),
-                    HttpStatus.OK);
-        }
-        var token = jwtService.getToken(
-                new JWTPayload(
-                        signinResponse.user().getUsername(),
-                        signinResponse.user().getRole()
-                )
-        );
-
-        return new ResponseEntity<>(
-                new AuthToken(
-                        token,
-                        true,
-                        signinResponse.message()
-                ),
-                HttpStatus.OK);
+        return ResponseEntity.ok(userService.signin(obj));
     }
 }

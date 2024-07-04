@@ -1,11 +1,10 @@
-package com.yasmim.project;
+package com.yasmim.project.configuration;
 
 import com.yasmim.project.impl.*;
 import com.yasmim.project.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class DependenciesConfiguration {
@@ -37,7 +36,7 @@ public class DependenciesConfiguration {
     @Bean
     @Scope("singleton")
     public JWTService jwtService() {
-        return new RSAJWTService();
+        return new RSASHA256JWTService();
     }
 
     @Bean

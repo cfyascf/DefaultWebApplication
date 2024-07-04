@@ -2,6 +2,8 @@ package com.yasmim.project.impl;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+
+import com.yasmim.project.exception.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -14,7 +16,7 @@ import com.yasmim.project.dto.JWTPayload;
 import com.yasmim.project.service.JWTService;
 import com.yasmim.project.service.KeyService;
 
-public class RSAJWTService implements JWTService {
+public class RSASHA256JWTService implements JWTService {
 
     @Autowired
     private KeyService keyService;
@@ -34,19 +36,19 @@ public class RSAJWTService implements JWTService {
                     .sign(algorithm);
 
         } catch (JWTCreationException exception) {
-            return "";
+            throw new UnauthorizedException("Failed to create JWT");
         }
     }
 
     @Override
     public Boolean verifyPermission(String token, Integer permissionLevel) {
         if(token == null) {
-            return false;
+            throw new UnauthorizedException("Token is null");
         }
 
         var auth = verifyToken(token);
         if(auth == null) {
-            return false;
+            throw new UnauthorizedException("Token is not valid");
         }
 
         if(permissionLevel == null) {
@@ -57,7 +59,11 @@ public class RSAJWTService implements JWTService {
         Object roleValue = claim.as(Object.class);
         String roleAsString = String.valueOf(roleValue);
 
-        return Integer.parseInt(roleAsString) == permissionLevel;
+        if(Integer.parseInt(roleAsString) != permissionLevel) {
+            throw new UnauthorizedException("Permission level doesn't match");
+        }
+
+        return true;
     }
 
 
@@ -78,7 +84,7 @@ public class RSAJWTService implements JWTService {
             return decodedJWT;
 
         } catch (JWTVerificationException exception) {
-            return null;
+            throw new UnauthorizedException("Failed to verify token");
         }
     }
 }
