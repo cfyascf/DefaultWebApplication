@@ -18,15 +18,8 @@ public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
 
-    @Autowired
-    private JWTService jwtService;
-
     @GetMapping("/department")
-    public ResponseEntity<List<DepartmentData>> getAllDepartments(
-            @RequestHeader("Authorization") String jwt) {
-
-        jwtService.verifyPermission(jwt, null);
-
+    public ResponseEntity<List<DepartmentData>> getAllDepartments() {
         return ResponseEntity.ok(departmentService.getAllDepartments());
     }
 }

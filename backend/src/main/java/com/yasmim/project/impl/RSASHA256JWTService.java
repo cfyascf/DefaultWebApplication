@@ -2,8 +2,11 @@ package com.yasmim.project.impl;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Objects;
 
+import com.yasmim.project.exception.ForbiddenException;
 import com.yasmim.project.exception.UnauthorizedException;
+import com.yasmim.project.session.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -20,6 +23,9 @@ public class RSASHA256JWTService implements JWTService {
 
     @Autowired
     private KeyService keyService;
+
+    @Autowired
+    private UserSession userSession;
 
     @Override
     public String getToken(JWTPayload userData) {
@@ -41,32 +47,6 @@ public class RSASHA256JWTService implements JWTService {
     }
 
     @Override
-    public Boolean verifyPermission(String token, Integer permissionLevel) {
-        if(token == null) {
-            throw new UnauthorizedException("Token is null");
-        }
-
-        var auth = verifyToken(token);
-        if(auth == null) {
-            throw new UnauthorizedException("Token is not valid");
-        }
-
-        if(permissionLevel == null) {
-            return true;
-        }
-
-        var claim = auth.getClaims().get("role");
-        Object roleValue = claim.as(Object.class);
-        String roleAsString = String.valueOf(roleValue);
-
-        if(Integer.parseInt(roleAsString) != permissionLevel) {
-            throw new UnauthorizedException("Permission level doesn't match");
-        }
-
-        return true;
-    }
-
-
     public DecodedJWT verifyToken(String token) {
         
         DecodedJWT decodedJWT;
@@ -85,6 +65,13 @@ public class RSASHA256JWTService implements JWTService {
 
         } catch (JWTVerificationException exception) {
             throw new UnauthorizedException("Failed to verify token");
+        }
+    }
+
+    @Override
+    public void verifyPermission(Integer permissionLevel) {
+        if(!Objects.equals(userSession.getRole(), permissionLevel)) {
+            throw new ForbiddenException("Permission denied");
         }
     }
 }

@@ -2,8 +2,11 @@ package com.yasmim.project.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.yasmim.project.dto.JWTPayload;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface JWTService {
     public String getToken(JWTPayload userData);
-    public Boolean verifyPermission(String token, Integer permissionLevel);
+    public DecodedJWT verifyToken(String token);
+    public void verifyPermission(Integer permissionLevel);
 }

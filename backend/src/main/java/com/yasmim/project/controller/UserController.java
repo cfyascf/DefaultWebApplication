@@ -26,10 +26,9 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(
-            @RequestBody RegisterData obj,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestBody RegisterData obj) {
 
-        jwtService.verifyPermission(jwt, 0);
+        jwtService.verifyPermission(0);
 
         return ResponseEntity.ok(userService.signup(obj));
     }
