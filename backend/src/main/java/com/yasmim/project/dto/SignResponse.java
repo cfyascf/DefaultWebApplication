@@ -1,6 +1,6 @@
 package com.yasmim.project.dto;
 
-import com.yasmim.project.entity.UserData;
+import com.yasmim.project.entities.UserData;
 
 public record SignResponse(
         UserData user,

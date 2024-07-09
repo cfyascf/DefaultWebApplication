@@ -1,8 +1,7 @@
 package com.yasmim.project.configuration;
 
-import com.yasmim.project.impl.*;
-import com.yasmim.project.service.*;
-import com.yasmim.project.session.UserSession;
+import com.yasmim.project.services.*;
+import com.yasmim.project.services.impl.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -47,7 +46,4 @@ public class DependenciesConfiguration {
     public KeyService keyService() {
         return new RSAKeyService();
     }
-
-    @Bean @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public UserSession userSession() { return new UserSession(null, null); }
 }
