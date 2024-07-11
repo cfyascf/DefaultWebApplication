@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface JWTService {
     public String getToken(JWTPayload userData);
+    public String generateVerificationToken(String email);
     public DecodedJWT verifyToken(String token);
     public void verifyPermission(Integer permissionLevel);
 }

@@ -1,5 +1,6 @@
 package com.yasmim.project.services.impl;
 
+import com.yasmim.project.dto.AuthToken;
 import com.yasmim.project.dto.JWTPayload;
 import com.yasmim.project.dto.LoginData;
 import com.yasmim.project.dto.RegisterData;
@@ -31,30 +32,33 @@ public class DefaultUserService implements UserService {
     private RSASHA256JWTService jwtService;
 
     @Override
-    public String signin(LoginData obj) {
+    public AuthToken signin(LoginData obj) {
 
         var user = userRepository.findByUsername(obj.username());
         if(user == null) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException("User not found.");
         }
 
         if(!passwordService.verifyEncodedPassword(obj.password(), user.getPassword())) {
-            throw new UnauthorizedException("Invalid password");
+            throw new UnauthorizedException("Invalid password.");
         }
 
-        return jwtService.getToken(new JWTPayload(user.getUsername(), user.getRole()));
+        var jwt = jwtService.getToken(
+                new JWTPayload(user.getUsername(), user.getRole()));
+
+        return new AuthToken(jwt, user.getId(), "User signed in successfully!");
     }
 
     @Override
-    public String signup(RegisterData obj) {
+    public AuthToken signup(RegisterData obj) {
 
         if(!obj.getPassword().equals(obj.getConfirmPassword())) {
-            throw new BadRequestException("Passwords do not match");
+            throw new BadRequestException("Passwords do not match.");
         }
 
         var existingUser = userRepository.findByUsername(obj.getUsername());
         if(existingUser != null) {
-            throw new ConflictException("Username already exists");
+            throw new ConflictException("Username already exists.");
         }
 
         var department = departmentService.findDepartmentByName(obj.getDepartment());
@@ -69,7 +73,10 @@ public class DefaultUserService implements UserService {
 
         userRepository.save(newUser);
 
-        return jwtService.getToken(new JWTPayload(newUser.getUsername(), newUser.getRole()));
+        var jwt = jwtService.getToken(
+                new JWTPayload(newUser.getUsername(), newUser.getRole()));
+
+        return new AuthToken(jwt, newUser.getId(), "User signed up successfully!");
     }
 
     @Override

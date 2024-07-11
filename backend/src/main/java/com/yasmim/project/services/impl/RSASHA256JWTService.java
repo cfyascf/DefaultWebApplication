@@ -5,6 +5,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.Objects;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.yasmim.project.services.exceptions.ForbiddenException;
 import com.yasmim.project.services.exceptions.UnauthorizedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,7 +49,26 @@ public class RSASHA256JWTService implements JWTService {
                     .sign(algorithm);
 
         } catch (JWTCreationException exception) {
-            throw new UnauthorizedException("Failed to create JWT");
+            throw new UnauthorizedException("Failed to create JWT.");
+        }
+    }
+
+    @Override
+    public String generateVerificationToken(String email) {
+
+        try {
+            Algorithm algorithm = Algorithm.RSA256(
+                    (RSAPublicKey) keyService.getKeys().getPublic(),
+                    (RSAPrivateKey) keyService.getKeys().getPrivate());
+
+            return JWT.create()
+                    .withIssuer(issuer)
+                    .withClaim("email", email)
+                    .withExpiresAt(new Date(System.currentTimeMillis() + (1000 * expiryInSeconds)))
+                    .sign(algorithm);
+
+        } catch (JWTCreationException exception) {
+            throw new UnauthorizedException("Failed to create verification token.");
         }
     }
 
@@ -62,7 +82,7 @@ public class RSASHA256JWTService implements JWTService {
                 (RSAPrivateKey) keyService.getKeys().getPrivate());
 
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer("yasmim")
+                    .withIssuer(issuer)
                     .build();
 
             decodedJWT = verifier.verify(token);
@@ -70,7 +90,7 @@ public class RSASHA256JWTService implements JWTService {
             return decodedJWT;
 
         } catch (JWTVerificationException exception) {
-            throw new UnauthorizedException("Failed to verify token");
+            throw new JWTDecodeException("Failed to verify token.");
         }
     }
 
@@ -78,16 +98,16 @@ public class RSASHA256JWTService implements JWTService {
     public void verifyPermission(Integer permissionLevel) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            throw new ForbiddenException("Permission denied");
+            throw new ForbiddenException("Permission denied.");
         }
 
         var role = authentication.getAuthorities().stream()
                 .map(grantedAuthority -> grantedAuthority.getAuthority().replace("ROLE_", ""))
                 .findFirst()
-                .orElseThrow(() -> new ForbiddenException("Permission denied"));
+                .orElseThrow(() -> new ForbiddenException("Permission denied."));
 
         if(!Objects.equals(Integer.parseInt(role), permissionLevel)) {
-            throw new ForbiddenException("Permission denied");
+            throw new ForbiddenException("Permission denied.");
         }
     }
 }

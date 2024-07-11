@@ -1,5 +1,6 @@
 package com.yasmim.project.controllers;
 
+import com.yasmim.project.dto.AuthToken;
 import com.yasmim.project.dto.LoginData;
 import com.yasmim.project.dto.RegisterData;
 import com.yasmim.project.services.JWTService;
@@ -22,7 +23,7 @@ public class UserController {
     private JWTService jwtService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(
+    public ResponseEntity<AuthToken> signup(
             @Valid @RequestBody RegisterData obj) {
 
         jwtService.verifyPermission(0);
@@ -31,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<String> login(
+    public ResponseEntity<AuthToken> login(
             @RequestBody LoginData obj) {
 
         return ResponseEntity.ok(userService.signin(obj));

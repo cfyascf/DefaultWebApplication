@@ -1,5 +1,7 @@
 package com.yasmim.project.controllers;
 
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.yasmim.project.dto.ValidationErrorResponse;
 import com.yasmim.project.services.exceptions.*;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({UnauthorizedException.class})
     public ResponseEntity<?> handleConflictException(UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler({JWTCreationException.class})
+    public ResponseEntity<?> handleJWTCreationException(JWTCreationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler({JWTDecodeException.class})
+    public ResponseEntity<?> handleJWTDecodeException(JWTDecodeException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
