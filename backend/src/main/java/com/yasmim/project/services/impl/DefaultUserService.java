@@ -5,6 +5,9 @@ import com.yasmim.project.dto.JWTPayload;
 import com.yasmim.project.dto.LoginData;
 import com.yasmim.project.dto.RegisterData;
 import com.yasmim.project.entities.UserData;
+import com.yasmim.project.entities.VerificationTokenData;
+import com.yasmim.project.repositories.VerificationTokenRepository;
+import com.yasmim.project.services.EmailService;
 import com.yasmim.project.services.exceptions.BadRequestException;
 import com.yasmim.project.services.exceptions.ConflictException;
 import com.yasmim.project.services.exceptions.NotFoundException;
@@ -23,6 +26,9 @@ public class DefaultUserService implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
+
+    @Autowired
     private DepartmentService departmentService;
 
     @Autowired
@@ -30,6 +36,9 @@ public class DefaultUserService implements UserService {
 
     @Autowired
     private RSASHA256JWTService jwtService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public AuthToken signin(LoginData obj) {
@@ -71,7 +80,12 @@ public class DefaultUserService implements UserService {
         newUser.setDepartment(department);
         newUser.setPassword(passwordService.encodePassword(obj.getPassword()));
 
+        var verificationToken = emailService.createVerificationToken(newUser);
+        emailService.sendVerificationEmail(verificationToken);
+        newUser.getTokens().add(verificationToken);
+
         userRepository.save(newUser);
+        verificationTokenRepository.save(verificationToken);
 
         var jwt = jwtService.getToken(
                 new JWTPayload(newUser.getUsername(), newUser.getRole()));

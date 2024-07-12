@@ -36,6 +36,7 @@ public class UserData {
     @Column(name = "Password")
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "Tokens")
     private List<VerificationTokenData> tokens = new ArrayList<>();
 }

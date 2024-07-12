@@ -17,9 +17,13 @@ public class VerificationTokenData {
     private Long id;
 
     @Lob
-    @Column(name = "token",unique = true, nullable = false)
+    @Column(name = "Token",unique = true, nullable = false)
     private String token;
 
-    @Column(name = "createdAt", nullable = false)
+    @Column(name = "CreatedAt", nullable = false)
     private Timestamp createdAt;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "User")
+    private UserData user;
 }
