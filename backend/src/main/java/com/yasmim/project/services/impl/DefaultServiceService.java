@@ -28,12 +28,11 @@ public class DefaultServiceService implements ServiceService {
 
     @Override
     public ServiceData registerService(RegisterServiceData obj) {
-        ServiceData service = new ServiceData();
-        service.setName(format(obj.getName()));
-        service.setDescription(format(obj.getDescription()));
+        ServiceData service = new ServiceData(
+                format(obj.getName()),
+                format(obj.getDescription()));
 
-        var manager = userService.findUserByFullName(format(obj.getManagerName()));
-        service.setManager(manager);
+        service.setManager(userService.findUserByFullName(format(obj.getManagerName())));
 
         return serviceRepository.save(service);
     }

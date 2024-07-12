@@ -2,6 +2,7 @@ package com.yasmim.project.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -9,9 +10,21 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "UserData")
 public class UserData {
+
+    public UserData(String username, String fullname, String email, Integer role,
+                    String password) {
+        this.username = username;
+        this.fullname = fullname;
+        this.email = email;
+        this.role = role;
+        this.password = password;
+        this.tokens = new ArrayList<>();
+        this.emailVerified = false;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +49,10 @@ public class UserData {
     @Column(name = "Password")
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "Tokens")
-    private List<VerificationTokenData> tokens = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    @OrderBy("id desc")
+    private List<VerificationTokenData> tokens;
+
+    @Column(name = "emailVerified", nullable = false)
+    private Boolean emailVerified;
 }

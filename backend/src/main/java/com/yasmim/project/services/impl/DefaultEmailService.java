@@ -32,16 +32,6 @@ public class DefaultEmailService implements EmailService {
     private String url;
 
     @Override
-    public VerificationTokenData createVerificationToken(UserData user) {
-        VerificationTokenData token = new VerificationTokenData();
-        token.setToken(jwtService.generateVerificationToken(user.getEmail()));
-        token.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        token.setUser(user);
-
-        return token;
-    }
-
-    @Override
     public void sendVerificationEmail(VerificationTokenData verificationToken) {
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();

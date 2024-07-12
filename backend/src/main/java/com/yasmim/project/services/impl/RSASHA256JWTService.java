@@ -2,10 +2,13 @@ package com.yasmim.project.services.impl;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.yasmim.project.entities.UserData;
+import com.yasmim.project.entities.VerificationTokenData;
 import com.yasmim.project.services.exceptions.ForbiddenException;
 import com.yasmim.project.services.exceptions.UnauthorizedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,23 +57,16 @@ public class RSASHA256JWTService implements JWTService {
     }
 
     @Override
-    public String generateVerificationToken(String email) {
+    public VerificationTokenData createVerificationToken(UserData user) {
+        VerificationTokenData token = new VerificationTokenData(
+                generateJWTVerificationToken(user.getEmail()),
+                new Timestamp(System.currentTimeMillis()));
 
-        try {
-            Algorithm algorithm = Algorithm.RSA256(
-                    (RSAPublicKey) keyService.getKeys().getPublic(),
-                    (RSAPrivateKey) keyService.getKeys().getPrivate());
+        token.setUser(user);
 
-            return JWT.create()
-                    .withIssuer(issuer)
-                    .withClaim("email", email)
-                    .withExpiresAt(new Date(System.currentTimeMillis() + (1000 * expiryInSeconds)))
-                    .sign(algorithm);
-
-        } catch (JWTCreationException exception) {
-            throw new UnauthorizedException("Failed to create verification token.");
-        }
+        return token;
     }
+
 
     @Override
     public DecodedJWT verifyToken(String token) {
@@ -108,6 +104,24 @@ public class RSASHA256JWTService implements JWTService {
 
         if(!Objects.equals(Integer.parseInt(role), permissionLevel)) {
             throw new ForbiddenException("Permission denied.");
+        }
+    }
+
+    public String generateJWTVerificationToken(String email) {
+
+        try {
+            Algorithm algorithm = Algorithm.RSA256(
+                    (RSAPublicKey) keyService.getKeys().getPublic(),
+                    (RSAPrivateKey) keyService.getKeys().getPrivate());
+
+            return JWT.create()
+                    .withIssuer(issuer)
+                    .withClaim("email", email)
+                    .withExpiresAt(new Date(System.currentTimeMillis() + (1000 * expiryInSeconds)))
+                    .sign(algorithm);
+
+        } catch (JWTCreationException exception) {
+            throw new UnauthorizedException("Failed to create verification token.");
         }
     }
 }

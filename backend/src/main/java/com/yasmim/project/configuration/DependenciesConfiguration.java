@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.context.WebApplicationContext;
 
 @Configuration
@@ -45,5 +47,17 @@ public class DependenciesConfiguration {
     @Scope("singleton")
     public KeyService keyService() {
         return new RSAKeyService();
+    }
+
+    @Bean
+    @Scope("singleton")
+    public EmailService emailService() {
+        return new DefaultEmailService();
+    }
+
+    @Bean
+    @Scope("singleton")
+    public JavaMailSender javaMailSender() {
+        return new JavaMailSenderImpl() {};
     }
 }

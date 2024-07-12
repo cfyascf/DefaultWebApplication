@@ -8,16 +8,14 @@ import com.yasmim.project.entities.UserData;
 import com.yasmim.project.entities.VerificationTokenData;
 import com.yasmim.project.repositories.VerificationTokenRepository;
 import com.yasmim.project.services.EmailService;
-import com.yasmim.project.services.exceptions.BadRequestException;
-import com.yasmim.project.services.exceptions.ConflictException;
-import com.yasmim.project.services.exceptions.NotFoundException;
-import com.yasmim.project.services.exceptions.UnauthorizedException;
+import com.yasmim.project.services.exceptions.*;
 import com.yasmim.project.repositories.UserRepository;
 import com.yasmim.project.services.DepartmentService;
 import com.yasmim.project.services.PasswordService;
 import com.yasmim.project.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.Timestamp;
 import java.util.Locale;
 
 public class DefaultUserService implements UserService {
@@ -43,15 +41,34 @@ public class DefaultUserService implements UserService {
     @Override
     public AuthToken signin(LoginData obj) {
 
+//        ..verify user existence..
         var user = userRepository.findByUsername(obj.username());
         if(user == null) {
             throw new NotFoundException("User not found.");
         }
 
+//        ..verify if input password is correct..
         if(!passwordService.verifyEncodedPassword(obj.password(), user.getPassword())) {
             throw new UnauthorizedException("Invalid password.");
         }
 
+//        ..checks if user needs a new email verification token..
+        var tokens = user.getTokens();
+        boolean resend = tokens.isEmpty() ||
+                tokens.getFirst().getCreatedAt().before(new Timestamp(System.currentTimeMillis() - (3600000)));
+
+//        ..sends new verification token..
+        if(resend) {
+            var newToken = jwtService.createVerificationToken(user);
+            verificationTokenRepository.save(newToken);
+            emailService.sendVerificationEmail(newToken);
+        }
+
+        if(!user.getEmailVerified()) {
+            throw new UserNotVerifiedException("User must vefiry their email adress.", resend);
+        }
+
+//        ..creates jwt..
         var jwt = jwtService.getToken(
                 new JWTPayload(user.getUsername(), user.getRole()));
 
@@ -61,32 +78,35 @@ public class DefaultUserService implements UserService {
     @Override
     public AuthToken signup(RegisterData obj) {
 
+//        ..password matching verification..
         if(!obj.getPassword().equals(obj.getConfirmPassword())) {
             throw new BadRequestException("Passwords do not match.");
         }
 
+//        ..user existing verification..
         var existingUser = userRepository.findByUsername(obj.getUsername());
         if(existingUser != null) {
             throw new ConflictException("Username already exists.");
         }
 
-        var department = departmentService.findDepartmentByName(obj.getDepartment());
+//        ..creates new user..
+        UserData newUser = new UserData(
+                format(obj.getUsername()), format(obj.getFullname()),
+                format(obj.getEmail()), obj.getRole(),
+                passwordService.encodePassword(obj.getPassword()));
 
-        UserData newUser = new UserData();
-        newUser.setUsername(format(obj.getUsername()));
-        newUser.setFullname(format(obj.getFullname()));
-        newUser.setEmail(format(obj.getEmail()));
-        newUser.setRole(obj.getRole());
-        newUser.setDepartment(department);
-        newUser.setPassword(passwordService.encodePassword(obj.getPassword()));
+        newUser.setDepartment(departmentService.findDepartmentByName(obj.getDepartment()));
 
+//        ..created their email verification token and sends it by email..
         var verificationToken = emailService.createVerificationToken(newUser);
         emailService.sendVerificationEmail(verificationToken);
         newUser.getTokens().add(verificationToken);
 
+//        ..saves user and token..
         userRepository.save(newUser);
         verificationTokenRepository.save(verificationToken);
 
+//        ..created jwt..
         var jwt = jwtService.getToken(
                 new JWTPayload(newUser.getUsername(), newUser.getRole()));
 

@@ -10,6 +10,7 @@ import java.util.List;
 
 @Service
 public interface EmailService {
-    public VerificationTokenData createVerificationToken(UserData user);
     public void sendVerificationEmail(VerificationTokenData verificationToken);
+
+//    CHECK SEALED INTERFACES TO IMPLEMENT EXCEPTIONS
 }
