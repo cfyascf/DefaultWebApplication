@@ -2,19 +2,28 @@ import styled from 'styled-components';
 
 const NavbarContainer = styled.div `
     width: 100%;
-    heigth: 10vh;
+    height: fit-content;
     display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 `;
 
-const CompanyLogo = styled.div `
+const CompanyBranding = styled.div `
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 `;
 
-const CompanyName = styled.div `
+const CompanyName = styled.h1 `
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
+`;
+
+const CompanyLogo = styled.img `
+    width: 30px;
+    height: 30px;
 `;
 
 const UserOptions = styled.div `
@@ -24,4 +33,4 @@ const UserOptions = styled.div `
     gap: 10px;
 `;
 
-export { CompanyLogo, NavbarContainer, UserOptions, CompanyName };
+export { CompanyBranding, NavbarContainer, UserOptions, CompanyName, CompanyLogo };
