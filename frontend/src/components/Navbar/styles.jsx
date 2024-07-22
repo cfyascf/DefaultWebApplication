@@ -21,9 +21,10 @@ const CompanyName = styled.h1 `
     font-weight: 600;
 `;
 
-const CompanyLogo = styled.img `
+const Icon = styled.img `
     width: 30px;
     height: 30px;
+    object-fit: cover;
 `;
 
 const UserOptions = styled.div `
@@ -33,4 +34,4 @@ const UserOptions = styled.div `
     gap: 10px;
 `;
 
-export { CompanyBranding, NavbarContainer, UserOptions, CompanyName, CompanyLogo };
+export { CompanyBranding, NavbarContainer, UserOptions, CompanyName, Icon };

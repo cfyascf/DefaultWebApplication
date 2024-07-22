@@ -1,16 +1,19 @@
-import { CompanyName, UserOptions, NavbarContainer, CompanyBranding, CompanyLogo } from "./styles"
-import logo from "/vite.svg";
+import { CompanyName, UserOptions, NavbarContainer, CompanyBranding, Icon } from "./styles"
+import logo from "/logo.svg";
+import user from "/user.svg";
+import logout from "/logout.svg";
 
 const Navbar = () => {
     return (
         <>
             <NavbarContainer>
                 <CompanyBranding>
-                    <CompanyLogo src={logo}></CompanyLogo>
+                    <Icon src={logo}></Icon>
                     <CompanyName>CompanyName</CompanyName>
                 </CompanyBranding>
                 <UserOptions>
-
+                    <Icon src={user}></Icon>
+                    <Icon src={logout}></Icon>
                 </UserOptions>
             </NavbarContainer>
         </>
