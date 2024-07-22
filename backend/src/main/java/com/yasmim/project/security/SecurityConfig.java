@@ -24,7 +24,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
                 .addFilterBefore(jwtFilter, AuthorizationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/signin").permitAll()
+                        .requestMatchers("/signin", "/signup").permitAll()
                         .anyRequest().authenticated())
             .build();
     }

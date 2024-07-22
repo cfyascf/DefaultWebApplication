@@ -98,7 +98,7 @@ public class DefaultUserService implements UserService {
         newUser.setDepartment(departmentService.findDepartmentByName(obj.getDepartment()));
 
 //        ..created their email verification token and sends it by email..
-        var verificationToken = emailService.createVerificationToken(newUser);
+        var verificationToken = jwtService.createVerificationToken(newUser);
         emailService.sendVerificationEmail(verificationToken);
         newUser.getTokens().add(verificationToken);
 
