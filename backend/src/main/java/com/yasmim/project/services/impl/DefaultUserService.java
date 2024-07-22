@@ -114,6 +114,22 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    public Boolean verifyUserEmail(String givenToken) {
+        var token = verificationTokenRepository.findByToken(givenToken);
+        if(token == null) {
+            throw new UnauthorizedException("Email verification token not found.");
+        }
+
+        var user = token.getUser();
+
+        user.setEmailVerified(true);
+        userRepository.save(user);
+        verificationTokenRepository.deleteAllByUser(user);
+
+        return true;
+    }
+
+    @Override
     public UserData findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
